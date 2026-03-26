@@ -91,14 +91,19 @@ void * popBack(List * list) {
 
 void * popCurrent(List * list) {
     Node *tmpNode = list->current;
+    void *dato = tmpNode->data;
     if(tmpNode) {
         if(tmpNode == list->head) {
-            list->head = list->current = tmpNode->next;
-            list->current->prev = list->head->prev = NULL;
-            free(tmpNode);
+            
+            if(tmpNode->next != NULL) {
+                list->head = list->current = tmpNode->next;
+                list->current->prev = list->head->prev = NULL;
+                free(tmpNode);
+            }
+            else list->head = list->current = NULL;
         }
         else if(tmpNode == list->tail) {
-            list->tail = list->current = NULL;
+            list->tail = tmpNode->prev;
             free(tmpNode);
         }
         else if(tmpNode->next != NULL) {
@@ -109,7 +114,7 @@ void * popCurrent(List * list) {
         }
         
     }
-    return list->current;
+    return dato;
 }
 
 void cleanList(List * list) {
