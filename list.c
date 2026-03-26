@@ -94,20 +94,22 @@ void * popCurrent(List * list) {
     if(tmpNode) {
         if(tmpNode == list->head) {
             list->head = list->current = tmpNode->next;
+            list->current->prev = list->head->prev = NULL;
             free(tmpNode);
         }
         else if(tmpNode == list->tail) {
-            list->tail = list->current = tmpNode->prev;
+            list->tail = list->current = NULL;
             free(tmpNode);
         }
         else if(tmpNode->next != NULL) {
             tmpNode->next->prev = tmpNode->prev;
             tmpNode->prev->next = tmpNode->next;
+            list->current = tmpNode->next;
             free(tmpNode);
         }
         
     }
-
+    return list->current;
 }
 
 void cleanList(List * list) {
