@@ -79,14 +79,11 @@ void * lastList(List * list) {
 }
 
 void * prevList(List * list) {
-    if(list->current) {
-        if(list->current->prev) {
-            list->current = list->current->prev;
-            return list->current->data;
-        }
-        else return NULL;
+    if(list->current && list->current->prev) {
+        list->current = list->current->prev;
+        return list->current->data;
     }
-    else return NULL;
+    return NULL;
 }
 
 // 4. Programe la función void pushFront(List * list, void * data), la cual agrega un dato al comienzo de la lista.
@@ -113,6 +110,11 @@ void pushBack(List * list, void * data) {
 // 5. Programe la función void pushCurrent(List * list, void* data), la cual agrega un dato a continuación del nodo apuntado por list->current.
 
 void pushCurrent(List * list, void * data) {
+
+    /*
+    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    Función original -> La versión que le sigue es más optimizada y robusta
+    
     Node *newNode = createNode(data);
     
     if(list->current) {
@@ -122,12 +124,31 @@ void pushCurrent(List * list, void * data) {
         else list->tail = newNode;
         list->current->next = newNode;
         list->current = newNode;
-        
     }
     // Caso donde la lista está completamente vacía
     else {
         if(list->head==NULL) list->head = list->tail = list->current = newNode;
-    }        
+    }
+    ---------------------------------------------------------------------------
+    */
+
+    if(!list) return;
+    
+    if(list->current) {
+        Node *newNode = createNode(data);
+        newNode->next = list->current->next;
+        newNode->prev = list->current;
+
+        if(list->current->next != NULL)list->current->next->prev = newNode;
+        else list->tail = newNode;
+
+        list->current->next = newNode;
+        list->current = newNode;
+    }
+    else if(list->head == NULL) {
+        Node *newNode = createNode(data);
+        list->head = list->tail = list->current = newNode;
+    }
 }
 
 void * popFront(List * list) {
@@ -178,7 +199,8 @@ void * popCurrent(List * list) {
     ------------------------------------------------------------------------------
     */
 
-    /* +++ 
+    /*
+    +++ 
     En vez de comenzar a preguntar sobre cada caso posible de uno en uno, esta función pregunta por cada vínculo posible
     que el nodo a eliminar, current, podría llegar a tener, comenzando a barrer list dependiendo de dichos vínculos que
     puedan o no existir para comenzar a ajustar la eliminación del nodo actual(current).
@@ -187,11 +209,12 @@ void * popCurrent(List * list) {
     1. list o el nodo current existen? Si no, finalizar la función de inmediato
     2. Inicializar variables tmpNode->a eliminar su data que debemos imprimir.
     3. Existe un nodo previo al actual? En caso de que sí, lo ajustamos para desenlazarlo del nodo actual. En caso
-    - contrario, eso significaría que el nodo actual era el head, por ende hay que actualizar el head.
+        contrario, eso significaría que el nodo actual era el head, por ende hay que actualizar el head.
     4. Existe un nodo siguiente al actual? En caso de que sí, lo ajustamos al nodo previo al actual; en caso contrario,
-    - eso significaría que el nodo actual era el tail, por ende el nodo tail de list debe ser ajustado.
+        eso significaría que el nodo actual era el tail, por ende el nodo tail de list debe ser ajustado.
     5. Liberar nodo actual(tmpNode) del heap.
-    --- */
+    ---
+    */
     
     // Descartar casos donde la lista o current no existan por seguridad
     if(!list || !list->current) return NULL;
