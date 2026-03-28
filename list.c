@@ -168,7 +168,7 @@ void * popCurrent(List * list) {
 
     /*
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    Versión inicial de la función -> Ignorar, le sigue una versión más optimizada.
+    Versión original de la función -> Ignorar, le sigue una versión mejor optimizada.
     
     Node *tmpNode = list->current;
     void *dato = NULL;
