@@ -113,7 +113,7 @@ void pushCurrent(List * list, void * data) {
 
     /*
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    Función original -> La versión que le sigue es más optimizada y robusta
+    Función original -> La versión que le sigue está mejor optimizada y es más robusta
     
     Node *newNode = createNode(data);
     
